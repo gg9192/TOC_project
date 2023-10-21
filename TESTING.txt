@@ -1,0 +1,1 @@
+To run the tests, do pytest in the terminal, assuming you have downloaded pytest (pip install pytest)
