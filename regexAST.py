@@ -27,13 +27,13 @@ class ZeroOrMore:
         return str(self.what) + "*"
 
 """This represents one regex followed by another"""
-class follows:
+class Follows:
     def __init__(self):
         self.first = None
         self.second = None
 
     def __repr__(self):
-        return str(self.first) + str(self.second)
+        return str(self.first) + " " + str(self.second)
 
 """This represents one regex or another"""
 class Or:

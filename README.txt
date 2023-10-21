@@ -4,11 +4,13 @@ Authors: Alex Guo
 Tooling: Python
     - pip install pytest
     - pip install graphvis
+    - pip install os
     - If you are using mac, you MUST let python access the files to where you clone this repo for this to work!!!!
 
 Sources: 
 nfa.py contains a class definition for an NFA
 regexAST contains classes for a regex ast
+test_project contains unit tests
 
 Required functions: list and briefly describe the functions you wrote to satisfy the various
 parts of the project (as listed above, in their respective sections)
