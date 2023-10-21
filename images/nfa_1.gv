@@ -1,0 +1,11 @@
+digraph nfa {
+	Start [label="" shape=none]
+	Start -> 1
+	Start -> 2
+	Start -> 3
+	Start -> 4
+	1
+	2
+	3
+	4
+}

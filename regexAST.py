@@ -50,6 +50,6 @@ class RegexAST:
         self.root = None
 
     def __repr__(self):
-        return str(self.root)
+        return str(self.root) #recursion
     
 

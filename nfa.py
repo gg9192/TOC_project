@@ -28,10 +28,28 @@ class NFA():
         for state in states:
             self.states.add(state)
 
-    def convertToDot():
-        pass
+    """this assumes you have graphviz installed.
+       outputs both a png and a gv file
+       the id is for a uniqueid
+    """
+    def convertToImage(self, id:int):
+        dot = graphviz.Digraph(name = "nfa", )
+        #create a hidden start node, this helps us point to the start state
+        dot.node(name ="Start",label="", shape="none")
+        # lets first deal with the start states
+        for state in self.startStates:
+            dot.node(str(state))
+        dot.render("nfa_" + str(id) + ".gv", format = "png")
     
-    
+
+os.chdir("./images")
+for file in os.listdir():
+    os.remove(file)
+
+nfa = NFA()
+nfa.setStates([1,2,3,4,5])
+nfa.setStartingStates([1,3])
+nfa.convertToImage(1)
 
 
 
