@@ -19,11 +19,18 @@ class NFA():
     """Adds the given edge"""
     def addEdge(self, sourceState:int, destState:int,  char:str):
         if sourceState in self.edges:
-            self.edges[sourceState][char] = destState
+            if char in self.edges[sourceState]:
+                self.edges[sourceState][char].add(destState)
+            else:
+                s = set()
+                s.add(destState)
+                self.edges[sourceState][char] = s
         else:
-            s = {}
-            s[char] = destState
-            self.edges[sourceState] = s
+            mapp = {}
+            s = set()
+            s.add(destState)
+            mapp[char] = s
+            self.edges[sourceState] = mapp
 
     """sets the states"""
     def setStates(self, states:list):
@@ -59,9 +66,8 @@ class NFA():
         # add the edges
         for state in self.edges:
             for letter in self.edges[state]:
-                print(letter)
-                print(str(state), self.edges[state][letter])
-                dot.edge(str(state), str(self.edges[state][letter]), label=letter)
+                for endstate in self.edges[state][letter]:
+                    dot.edge(str(state), str(endstate), label=letter)
         
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
