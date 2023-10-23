@@ -63,20 +63,8 @@ class NFA():
                 print(str(state), self.edges[state][letter])
                 dot.edge(str(state), str(self.edges[state][letter]), label=letter)
         
-        dot.render("nfa_" + str(id) + ".gv", format = "png")
+        dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
-
-os.chdir("./images")
-for file in os.listdir():
-    os.remove(file)
-
-nfa = NFA()
-nfa.setStates([1,2,3,4,5])
-nfa.setStartingStates([1,3])
-
-nfa.addEdge(1,3,"A")
-nfa.setAcceptingStates([4,5]);
-nfa.convertToImage(1)
 
 
 

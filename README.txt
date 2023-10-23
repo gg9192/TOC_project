@@ -29,6 +29,7 @@ Done
 
 2. Define a datatype for representing nondeterministic finite automata with epsilon-transitions
 (as this format is used for the first step of translating regular expressions). [15 points]
+Done
 
 
 3. Write a printing function that can generate a GraphViz file for the transition diagram of an
