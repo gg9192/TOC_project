@@ -105,10 +105,10 @@ class DrawGraphs (unittest.TestCase):
 
 
     """
-    Tests Epsilon transitions
+    Tests Epsilon transitions can be rendered correctly
     Builds the following NFA:
     Q = {1,2,3}
-    Alphabet = {a,b}
+    Alphabet = {}
     R(ϵ) = {(1,2),(2,3),(3,4)}
     s = {1,2}
     f = {3}
@@ -126,3 +126,14 @@ class DrawGraphs (unittest.TestCase):
         nfa = self.buildGraph4()
         nfa.convertToImage(4)
         self.assertTrue(True) 
+
+    """
+    Builds the following NFA:
+    Q = {1,2,3}
+    Alphabet = {a,b,c}
+    R(a) = {(1,1),(1,2),(1,3)}
+    R(b) = {(2,1),(2,2),(2,3)}
+    R(c) = {(3,1),(3,2),(3,3)}
+    """
+    def buildGraph5():
+
