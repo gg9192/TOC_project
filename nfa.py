@@ -54,6 +54,7 @@ class NFA():
        the id is for a uniqueid
     """
     def convertToImage(self, id:int):
+        graphviz.charset = 'utf-8'
         dot = graphviz.Digraph(name = "nfa", )
         #create a hidden start node, this helps us point to the start state
         dot.node(name ="Start",label="", shape="none")
@@ -71,7 +72,10 @@ class NFA():
         for state in self.edges:
             for letter in self.edges[state]:
                 for endstate in self.edges[state][letter]:
-                    dot.edge(str(state), str(endstate), label=letter)
+                    if letter == None:
+                        dot.edge(str(state), str(endstate), label="ϵ")
+                    else:
+                        dot.edge(str(state), str(endstate), label=letter)
         
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
