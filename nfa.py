@@ -9,6 +9,7 @@ class NFA():
         self.acceptingStates = set()
         self.states = set()
         self.alphabet = set()
+        self.alphabet.add(None)
     
     """sets the starting states"""
     def setStartingStates(self, states:list):
