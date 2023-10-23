@@ -8,6 +8,7 @@ class NFA():
         self.startStates = set()
         self.acceptingStates = set()
         self.states = set()
+        self.alphabet = set()
     
     """sets the starting states"""
     def setStartingStates(self, states:list):
@@ -18,6 +19,8 @@ class NFA():
     
     """Adds the given edge"""
     def addEdge(self, sourceState:int, destState:int,  char:str):
+        if char not in self.alphabet:
+            self.alphabet.add(char)
         if sourceState in self.edges:
             if char in self.edges[sourceState]:
                 self.edges[sourceState][char].add(destState)

@@ -24,6 +24,7 @@ class DrawGraphs (unittest.TestCase):
     R(c) = {(2,4),(1,2),(3,4)}
     s = {1,3}
     f = {2,4}
+    correct
     """
     def buildGraph1(self):
         nfa = NFA()
@@ -42,4 +43,34 @@ class DrawGraphs (unittest.TestCase):
         nfa = self.buildGraph1()
         nfa.convertToImage(1)
         print(nfa.edges)
-        self.assertTrue(True)        
+        self.assertTrue(True)  
+    
+    """
+    Builds the following NFA:
+    Q = {1,2,3}
+    Alphabet = {a,b,c}
+    R(a) = {(1,1),(1,2),(1,3)}
+    R(b) = {(2,1),(2,2),(2,3)}
+    R(c) = {(3,1),(3,2),(3,3)}
+    s = {1,3}
+    f = {2}
+    correct
+    """
+    def buildGraph2(self):
+        nfa = NFA()
+        nfa.setStates([1,2,3])
+        nfa.setStartingStates([1,3])
+        nfa.setAcceptingStates([2])
+        for start, dest in {(1,1),(1,2),(1,3)}:
+            nfa.addEdge(start,dest,"a")
+        for start, dest in {(2,1),(2,2),(2,3)}:
+            nfa.addEdge(start,dest,"b")
+        for start, dest in {(3,1),(3,2),(3,3)}:
+            nfa.addEdge(start,dest,"c")
+        return nfa    
+    
+    def test_graph2(self):
+        nfa = self.buildGraph2()
+        nfa.convertToImage(2)
+        print(nfa.edges)
+        self.assertTrue(True) 
