@@ -1,6 +1,7 @@
 import unittest
 from regexAST import *
 
+"""All tests for regex to string"""
 class testToString(unittest.TestCase):
     
     #(A + B)*
@@ -11,8 +12,10 @@ class testToString(unittest.TestCase):
         orr = Or()
         what.what = orr
         tree.root.what = what
-        orr.first = "A"
-        orr.second = "B"
+        orr.first = Just()
+        orr.first.char = "A"
+        orr.second = Just()
+        orr.second.char = "B"
         s = str(tree)
         self.assertTrue(s == "(A | B)*")
     
@@ -20,15 +23,18 @@ class testToString(unittest.TestCase):
     def test_regextostring2(self):
         tree = RegexAST()
         o = Or()
-        o.first = "A"
-        o.second = "B"
+        o.first = Just()
+        o.first.char = "A"
+        o.second = Just()
+        o.second.char = "B"
         p = Parens()
         p.what = o
         one = OneOrMore()
         one.what = p
         o = Or()
         o.first = one
-        o.second = "C"
+        o.second = Just()
+        o.second.char = "C"
         p = Parens()
         p.what = o
         o = OneOrMore()
@@ -47,8 +53,10 @@ class testToString(unittest.TestCase):
         p = root.what
         p.what = Or()
         p.what.first = OneOrMore()
-        p.what.first.what = "A"
-        p.what.second = "B"
+        p.what.first.what = Just()
+        p.what.first.what.char = "A"
+        p.what.second = Just()
+        p.what.second.char = "B"
         s = str(tree)
         print(s)
         self.assertTrue(s == "(A+ | B)*")
@@ -60,7 +68,8 @@ class testToString(unittest.TestCase):
         tree.root = o
         r = tree.root
         r.first = OneOrMore()
-        r.first.what = "A"
+        r.first.what = Just()
+        r.first.what.char = "A"
         sec = Parens()
         r.second = sec
         sec.what = Follows()
@@ -69,9 +78,12 @@ class testToString(unittest.TestCase):
         f.first.what = Parens()
         f.first.what.what = Or()
         o = f.first.what.what
-        o.first = "B"
-        o.second = "C"
-        f.second = "D"
+        o.first = Just()
+        o.first.char = "B"
+        o.second = Just()
+        o.second.char = "C"
+        f.second = Just()
+        f.second.char = "D"
         s = str(tree)
         self.assertTrue(s == "A+ | ((B | C)* D)")
 
@@ -79,11 +91,14 @@ class testToString(unittest.TestCase):
     def test_regextostring5(self):
         tree = RegexAST()
         tree.root = Follows()
-        tree.root.first = "A"
+        tree.root.first = Just()
+        tree.root.first.char = "A"
         f = Follows()
         tree.root.second = f
-        f.first = "B"
-        f.second = "C"
+        f.first = Just()
+        f.first.char = "B"
+        f.second = Just()
+        f.second.char = "C"
         s = str(tree)
         self.assertTrue(s == "A B C")
 

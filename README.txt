@@ -36,10 +36,14 @@ Done
 automaton as implemented in the previous step. I am providing a sample GraphViz file for
 an automaton, for inspiration. You can render such files using online tools like
 This is dfa1.gv (rendered in dfa1.pdf). [15 points]
-
+Done
 
 4. Write a function to translate regular expressions into finite automata. [60 points]
-
+- follows
+- oneormore
+- zeroormore
+= parens
+- or
 
 5. Now write a function that can determinize a finite automaton. You can just take in an
 automaton of the type you defined, and generate a new one of those automata, where the
@@ -50,4 +54,4 @@ NFAs, but use the subset construction to eliminate all nondeterminism. [50 point
 
 
 6. Write up your solution following the testing and reporting requirements at the end of these
-instructions.
+instructions.   

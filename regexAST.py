@@ -9,6 +9,9 @@ class Parens:
 
     def __repr__(self):
         return "(" + str(self.what) + ")"
+    
+    def toNFA():
+        pass
 
 """This represents one or more of a given regex"""
 class OneOrMore:
@@ -17,6 +20,9 @@ class OneOrMore:
 
     def __repr__(self):
         return str(self.what) + "+"
+    
+    def toNFA():
+        pass
 
 """This represents zero or more of a given regex"""
 class ZeroOrMore:
@@ -25,6 +31,9 @@ class ZeroOrMore:
 
     def __repr__(self):
         return str(self.what) + "*"
+    
+    def toNFA():
+        pass
 
 """This represents one regex followed by another"""
 class Follows:
@@ -34,6 +43,9 @@ class Follows:
 
     def __repr__(self):
         return str(self.first) + " " + str(self.second)
+    
+    def toNFA():
+        pass
 
 """This represents one regex or another"""
 class Or:
@@ -43,6 +55,16 @@ class Or:
 
     def __repr__(self):
         return str(self.first) + " | " + str(self.second)
+    
+    def toNFA():
+        pass
+    
+class Just:
+    def __init__(self):
+        self.char = None
+    
+    def __repr__(self):
+        return str(self.char)
 
 """This is the class for an abstract syntax tree for regex"""
 class RegexAST:
@@ -52,4 +74,6 @@ class RegexAST:
     def __repr__(self):
         return str(self.root) #recursion
     
+    def toNFA(self):
+        return self.root.toNFA()
 
