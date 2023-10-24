@@ -72,10 +72,12 @@ class NFA():
         for state in self.edges:
             for letter in self.edges[state]:
                 for endstate in self.edges[state][letter]:
+                    # check error states
                     if letter not in self.alphabet:
                         raise Exception("The letter is not in the alphabet, can not draw!")
                     if state not in self.states or endstate not in self.states:
                         raise Exception("Start or end state does not exist, can not draw!")
+                    # epsilon
                     if letter == None:
                         dot.edge(str(state), str(endstate), label="ϵ")
                     else:

@@ -128,12 +128,31 @@ class DrawGraphs (unittest.TestCase):
         self.assertTrue(True) 
 
     """
+    Tests Epsilon transitions in graph
     Builds the following NFA:
     Q = {1,2,3}
-    Alphabet = {a,b,c}
-    R(a) = {(1,1),(1,2),(1,3)}
-    R(b) = {(2,1),(2,2),(2,3)}
-    R(c) = {(3,1),(3,2),(3,3)}
+    Alphabet = {a,b}
+    R(a) = {(1,2),(3,1)}
+    R(b) = {(3,1),(1,2)}:
+    R(ϵ) = {(3,2),(1,3)}
+    s = {1,2}
+    f = {3}
+    correct
     """
-    def buildGraph5():
+    def buildGraph5(self):
+        nfa = NFA()
+        nfa.setStates([1,2,3])
+        nfa.setStartingStates([1,2])
+        nfa.setAcceptingStates([3])
+        for start, dest in {(3,2),(1,3)}:
+            nfa.addEdge(start,dest,"ϵ")
+        for start, dest in {(3,1),(1,2)}:
+            nfa.addEdge(start,dest,"b")
+        for start, dest in {(1,2),(3,1)}:
+            nfa.addEdge(start,dest,"a")
+        return nfa
 
+    def test_graph5(self):
+        nfa = self.buildGraph5()
+        nfa.convertToImage(5)
+        self.assertTrue(True) 
