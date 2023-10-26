@@ -3,13 +3,14 @@ import os
 """This class represents"an NFA"""
 class NFA():
     def __init__(self):
-        # Nested hashmap, first 
+        # Nested hashmap, first we give the startstate, then we give the letter. We get the destsate
         self.edges = {}
         self.startStates = set()
         self.acceptingStates = set()
         self.states = set()
         self.alphabet = set()
         self.alphabet.add(None)
+        self.determinized = False
     
     """sets the starting states"""
     def setStartingStates(self, states:list):
@@ -18,25 +19,59 @@ class NFA():
                 raise Exception("Starting states must be a subset of states, perhaps you didn't set your states first")
             self.startStates.add(state)
     
-    """Adds the given edge"""
+    """Adds the given edge to the NFA"""
     def addEdge(self, sourceState:int, destState:int,  char:str):
         if char not in self.alphabet:
+            # add the character to the alphabet
             self.alphabet.add(char)
         if sourceState in self.edges:
+            # if we have the sourcestate in the edges
             if char in self.edges[sourceState]:
+                # if we have outgoing edges with the same character from the sourcs state
                 self.edges[sourceState][char].add(destState)
             else:
                 s = set()
                 s.add(destState)
                 self.edges[sourceState][char] = s
         else:
+            # if dont have the sourcestate in the edges
             mapp = {}
             s = set()
             s.add(destState)
             mapp[char] = s
             self.edges[sourceState] = mapp
 
-    """sets the states"""
+    """removes the given edge from the current NFA"""
+    def removeEdge(self, startState:int, endState:int, char:str):
+        # validate that the edge exists
+        if startState in self.edges:
+            if char in self.edges[startState]:
+                if endState in self.edges[startState][char]:
+                    #the edge exists
+                    if len(self.edges[startState]) == 1:
+                        # theres only 1 character in transitions from the start state
+                        if len(self.edges[startState][char]) == 1:
+                            # there is only one transition for this character
+                            # ie, this is the only edge for the startstate
+                            del self.edges[startState]
+                        else:
+                            # there are multiple transitions for this character
+                            self.edges[startState][char].remove(endState)
+                    else:
+                        # there are multiple transitions from the start state
+                        if len(self.edges[startState][char]) == 1:
+                            # there is only one transition for this character
+                            del self.edges[startState][char]
+                        else:
+                            # there are multiple transitions for this character
+                            self.edges[startState][char].remove(endState)
+
+
+                    return
+        raise Exception("edge does not exist")
+
+
+    """sets the states of the NFA"""
     def setStates(self, states:list):
         for state in states:
             self.states.add(state)
@@ -87,5 +122,3 @@ class NFA():
     
 
 
-
-        

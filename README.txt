@@ -42,9 +42,7 @@ Done
 - follows
 - oneormore
 - zeroormore
-- parens
 - or
-- just
 
 5. Now write a function that can determinize a finite automaton. You can just take in an
 automaton of the type you defined, and generate a new one of those automata, where the

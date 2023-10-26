@@ -1,6 +1,7 @@
 """ The purpose of this file is to contain all the classes required to build an AST for regex
     To get more detail, look at the second method.
 """
+from nfa import *
 
 """The purpose of this class is to represent parentheses in regex"""
 class Parens:
@@ -10,8 +11,9 @@ class Parens:
     def __repr__(self):
         return "(" + str(self.what) + ")"
     
-    def toNFA():
-        pass
+    "converts the regex to NFA" 
+    def toNFA(self):
+        return self.what.toNfa()
 
 """This represents one or more of a given regex"""
 class OneOrMore:
@@ -21,6 +23,7 @@ class OneOrMore:
     def __repr__(self):
         return str(self.what) + "+"
     
+    "converts the regex to NFA"
     def toNFA():
         pass
 
@@ -32,6 +35,7 @@ class ZeroOrMore:
     def __repr__(self):
         return str(self.what) + "*"
     
+    "converts the regex to NFA"
     def toNFA():
         pass
 
@@ -44,6 +48,7 @@ class Follows:
     def __repr__(self):
         return str(self.first) + " " + str(self.second)
     
+    "converts the regex to NFA"
     def toNFA():
         pass
 
@@ -56,8 +61,11 @@ class Or:
     def __repr__(self):
         return str(self.first) + " | " + str(self.second)
     
-    def toNFA():
-        pass
+    "converts the regex to NFA"
+    def toNFA(self):
+        nfa1 = self.first.toNFA()
+        nfa2 = self.second.toNFA()
+        
     
 class Just:
     def __init__(self):
@@ -65,6 +73,15 @@ class Just:
     
     def __repr__(self):
         return str(self.char)
+    
+    "converts the regex to NFA"
+    def toNfa(self):
+        nfa = NFA()
+        nfa.setStates([1,2])
+        nfa.setStartingStates([1])
+        nfa.setAcceptingStates([2])
+        nfa.addEdge(1,2,self.char)
+
 
 """This is the class for an abstract syntax tree for regex"""
 class RegexAST:
