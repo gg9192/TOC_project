@@ -2,9 +2,20 @@
     To get more detail, look at the second method.
 """
 from nfa import *
+# abstract class
+from abc import *
+
+class TreeElement(ABC):
+    @abstractmethod
+    def __repr__(self):
+        pass
+
+    @abstractmethod
+    def toNfa(self):
+        pass
 
 """The purpose of this class is to represent parentheses in regex"""
-class Parens:
+class Parens(TreeElement):
     def __init__(self):
         self.what = None
 
@@ -12,11 +23,11 @@ class Parens:
         return "(" + str(self.what) + ")"
     
     "converts the regex to NFA" 
-    def toNFA(self):
+    def toNfa(self):
         return self.what.toNfa()
 
 """This represents one or more of a given regex"""
-class OneOrMore:
+class OneOrMore(TreeElement):
     def __init__(self):
         self.what = None
 
@@ -24,7 +35,7 @@ class OneOrMore:
         return str(self.what) + "+"
     
     "converts the regex to NFA"
-    def toNFA():
+    def toNfa():
         pass
 
 """This represents zero or more of a given regex"""
@@ -36,11 +47,11 @@ class ZeroOrMore:
         return str(self.what) + "*"
     
     "converts the regex to NFA"
-    def toNFA():
+    def toNfa():
         pass
 
 """This represents one regex followed by another"""
-class Follows:
+class Follows(TreeElement):
     def __init__(self):
         self.first = None
         self.second = None
@@ -49,11 +60,11 @@ class Follows:
         return str(self.first) + " " + str(self.second)
     
     "converts the regex to NFA"
-    def toNFA():
+    def toNfa():
         pass
 
 """This represents one regex or another"""
-class Or:
+class Or(TreeElement):
     def __init__(self):
         self.first = None
         self.second = None
@@ -62,12 +73,12 @@ class Or:
         return str(self.first) + " | " + str(self.second)
     
     "converts the regex to NFA"
-    def toNFA(self):
+    def toNfa(self):
         nfa1 = self.first.toNFA()
         nfa2 = self.second.toNFA()
         
     
-class Just:
+class Just(TreeElement):
     def __init__(self):
         self.char = None
     
@@ -84,13 +95,13 @@ class Just:
 
 
 """This is the class for an abstract syntax tree for regex"""
-class RegexAST:
+class RegexAST():
     def __init__(self):
         self.root = None
 
     def __repr__(self):
         return str(self.root) #recursion
     
-    def toNFA(self):
+    def toNfa(self):
         return self.root.toNFA()
 

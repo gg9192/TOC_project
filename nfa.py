@@ -70,6 +70,36 @@ class NFA():
                     return
         raise Exception("edge does not exist")
 
+    """
+    we can not have duplicate state names when we determinize some regexes, this function solves this problem
+    the way that I generate these NFAs guarentee that states have names 1 to n where n is the number of states
+    """
+    def makeDisjoint(self, nfa):
+        newstateid = len(self.states) + 1
+        # maps the old state number to the new state number
+        stateMap = {}
+        for state in self.states:
+            stateMap[state] = newstateid
+            newstateid += 1
+        
+        # deal with the start states
+        newstart = set()
+        for state in self.startStates:
+            newstart.add(stateMap[state])
+        self.startStates = newstart
+        
+        # deal with accepting states
+        newaccept = set()
+        for state in self.acceptingStates:
+            newaccept.add(stateMap[state])
+        
+        # deal witrh the edges
+        for startstate in self.edges:
+            for letter in self.edges[state]:
+                for endstate in self.edges[state][letter]:
+                    self.addEdge(stateMap[startstate], stateMap[endstate], letter)
+                    self.removeEdge(startstate, endstate, letter)
+
 
     """sets the states of the NFA"""
     def setStates(self, states:list):
@@ -104,9 +134,9 @@ class NFA():
         for state in self.startStates:
             dot.edge("Start", str(state))
         # add the edges
-        for state in self.edges:
-            for letter in self.edges[state]:
-                for endstate in self.edges[state][letter]:
+        for startstate in self.edges:
+            for letter in self.edges[startstate]:
+                for endstate in self.edges[startstate][letter]:
                     # check error states
                     if letter not in self.alphabet:
                         raise Exception("The letter is not in the alphabet, can not draw!")
@@ -114,9 +144,9 @@ class NFA():
                         raise Exception("Start or end state does not exist, can not draw!")
                     # epsilon
                     if letter == None:
-                        dot.edge(str(state), str(endstate), label="ϵ")
+                        dot.edge(str(startstate), str(endstate), label="ϵ")
                     else:
-                        dot.edge(str(state), str(endstate), label=letter)
+                        dot.edge(str(startstate), str(endstate), label=letter)
         
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
