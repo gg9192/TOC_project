@@ -100,6 +100,8 @@ class NFA():
                     self.addEdge(stateMap[startstate], stateMap[endstate], letter)
                     self.removeEdge(startstate, endstate, letter)
 
+        return nfa
+
 
     """sets the states of the NFA"""
     def setStates(self, states:list):
