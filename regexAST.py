@@ -76,6 +76,8 @@ class Or(TreeElement):
     def toNfa(self):
         nfa1 = self.first.toNFA()
         nfa2 = self.second.toNFA()
+        nfa1.makeDisjoint(nfa2)
+        
         
     
 class Just(TreeElement):
