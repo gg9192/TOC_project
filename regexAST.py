@@ -16,8 +16,8 @@ class TreeElement(ABC):
 
 """The purpose of this class is to represent parentheses in regex"""
 class Parens(TreeElement):
-    def __init__(self):
-        self.what = None
+    def __init__(self, what:TreeElement):
+        self.what = what
 
     def __repr__(self):
         return "(" + str(self.what) + ")"
@@ -28,8 +28,8 @@ class Parens(TreeElement):
 
 """This represents one or more of a given regex"""
 class OneOrMore(TreeElement):
-    def __init__(self):
-        self.what = None
+    def __init__(self, what:TreeElement):
+        self.what = what
 
     def __repr__(self):
         return str(self.what) + "+"
@@ -40,8 +40,8 @@ class OneOrMore(TreeElement):
 
 """This represents zero or more of a given regex"""
 class ZeroOrMore:
-    def __init__(self):
-        self.what = None
+    def __init__(self, what:TreeElement):
+        self.what = what
 
     def __repr__(self):
         return str(self.what) + "*"
@@ -52,9 +52,9 @@ class ZeroOrMore:
 
 """This represents one regex followed by another"""
 class Follows(TreeElement):
-    def __init__(self):
-        self.first = None
-        self.second = None
+    def __init__(self, first:TreeElement, second:TreeElement):
+        self.first = first
+        self.second = second
 
     def __repr__(self):
         return str(self.first) + " " + str(self.second)
@@ -65,9 +65,9 @@ class Follows(TreeElement):
 
 """This represents one regex or another"""
 class Or(TreeElement):
-    def __init__(self):
-        self.first = None
-        self.second = None
+    def __init__(self, first:TreeElement, second:TreeElement):
+        self.first = first
+        self.second = second
 
     def __repr__(self):
         return str(self.first) + " | " + str(self.second)
@@ -79,8 +79,8 @@ class Or(TreeElement):
         
     
 class Just(TreeElement):
-    def __init__(self):
-        self.char = None
+    def __init__(self, what:TreeElement):
+        self.what = what
     
     def __repr__(self):
         return str(self.char)
