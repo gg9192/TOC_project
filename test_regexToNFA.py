@@ -17,8 +17,6 @@ class testToString(unittest.TestCase):
         nfa.addEdge(6,5,None)
         nfa.setStartingStates([5])
         nfa.setAcceptingStates([6])
-        nfa.alphabet.add("A")
-        nfa.alphabet.add("B")
         return nfa
 
     
@@ -53,9 +51,6 @@ class testToString(unittest.TestCase):
             nfa.addEdge(10,9,None)
             nfa.setStartingStates([9])
             nfa.setAcceptingStates([10])
-            nfa.alphabet.add("A")
-            nfa.alphabet.add("B")
-            nfa.alphabet.add("C")
             return nfa
 
     #((A | B)+ | C)+
@@ -71,8 +66,29 @@ class testToString(unittest.TestCase):
         oom2 = OneOrMore(outerparens)
         tree = RegexAST(oom2)
         nfa = tree.toNfa()
+        
         correct = self.buildNFA2()
+        print(nfa,correct)
         self.assertTrue(correct == nfa)
+
+    def buildNFA3(self):
+        nfa = NFA()
+        nfa.setStates([1,2,3,4,5,6,7,8])
+        nfa.startStates.add(7)
+        nfa.acceptingStates.add(8)
+        nfa.addEdge(7,3,None)
+        nfa.addEdge(7,5,None)
+        nfa.addEdge(3,1,None)
+        nfa.addEdge(1,2,"A")
+        nfa.addEdge(2,4,None)
+        nfa.addEdge(4,8,None)
+        nfa.addEdge(4,3,None)
+        nfa.addEdge(5,6,"B")
+        nfa.addEdge(6,8,None)
+        nfa.addEdge(8,7,None)
+        nfa.addEdge(7,8,None)
+        return nfa
+        
 
     # (A+ | B)*
     def test_regextoNFA3(self):
@@ -83,17 +99,22 @@ class testToString(unittest.TestCase):
         paren = Parens(orr)
         zmm2 = ZeroOrMore(paren)
         tree = RegexAST(zmm2)
-        s = str(tree)
-        self.assertTrue(s == "(A+ | B)*")
+        nfa = tree.toNfa()
+        correct = self.buildNFA3()
+        nfa.convertToImage(20)
+        nfa.convertToImage(21)
+        print(nfa.edges)
+        print(correct.edges)
+        self.assertTrue(correct == nfa)
         
-    # A+ | ((B | C)* D)*
+    # A+ | ((B | C)* D)+
     def test_regextoNFA4(self):
         a = Just("A")
         oom = OneOrMore(a)
         b = Just(b)
         tree = RegexAST()
         s = str(tree)
-        self.assertTrue(s == "A+ | ((B | C)* D)*")
+        self.assertTrue(s == "A+ | ((B | C)* D)+")
 
     # A B C
     def test_regextoNFA5(self):
