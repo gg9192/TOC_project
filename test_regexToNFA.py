@@ -14,10 +14,10 @@ class testToString(unittest.TestCase):
         ast = RegexAST(zom)
         s = str(ast)
         print(s) 
-        nfa = orr.toNfa()
+        nfa = ast.toNfa()
         print(nfa.states)
-        nfa.convertToImage(20)
-        self.assertTrue("" == "(A | B)*")
+        #nfa.convertToImage(20)
+        self.assertTrue(s == "(A | B)*")
     
     #((a | b)+ | C)+
     def test_regextoNFA2(self):
