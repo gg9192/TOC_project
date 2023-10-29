@@ -39,10 +39,8 @@ This is dfa1.gv (rendered in dfa1.pdf). [15 points]
 Done
 
 4. Write a function to translate regular expressions into finite automata. [60 points]
-- follows
 - oneormore
 - zeroormore
-- or
 
 5. Now write a function that can determinize a finite automaton. You can just take in an
 automaton of the type you defined, and generate a new one of those automata, where the

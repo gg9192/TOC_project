@@ -12,12 +12,37 @@ class NFA():
         self.alphabet.add(None)
         self.determinized = False
     
+    
+
     """sets the starting states"""
     def setStartingStates(self, states:list):
         for state in states:
             if state not in self.states:
                 raise Exception("Starting states must be a subset of states, perhaps you didn't set your states first")
             self.startStates.add(state)
+    
+    """Adds the given edge to the dictionary, and update the new alphabet set"""
+    def addEdgeToNew(sourceState:int, destState:int,  char:str, newEdges:dict, newAlphabet: set):
+        if char not in newAlphabet:
+            # add the character to the alphabet
+            newAlphabet.add(char)
+        if sourceState in newEdges:
+            # if we have the sourcestate in the edges
+            if char in newEdges[sourceState]:
+                # if we have outgoing edges with the same character from the sourcs state
+                newEdges[sourceState][char].add(destState)
+            else:
+                s = set()
+                s.add(destState)
+                newEdges[sourceState][char] = s
+        else:
+            # if dont have the sourcestate in the edges
+            mapp = {}
+            s = set()
+            s.add(destState)
+            mapp[char] = s
+            newEdges[sourceState] = mapp
+
     
     """Adds the given edge to the NFA"""
     def addEdge(self, sourceState:int, destState:int,  char:str):
@@ -41,35 +66,6 @@ class NFA():
             mapp[char] = s
             self.edges[sourceState] = mapp
 
-    """removes the given edge from the current NFA"""
-    def removeEdge(self, startState:int, endState:int, char:str):
-        # validate that the edge exists
-        if startState in self.edges:
-            if char in self.edges[startState]:
-                if endState in self.edges[startState][char]:
-                    #the edge exists
-                    if len(self.edges[startState]) == 1:
-                        # theres only 1 character in transitions from the start state
-                        if len(self.edges[startState][char]) == 1:
-                            # there is only one transition for this character
-                            # ie, this is the only edge for the startstate
-                            del self.edges[startState]
-                        else:
-                            # there are multiple transitions for this character
-                            self.edges[startState][char].remove(endState)
-                    else:
-                        # there are multiple transitions from the start state
-                        if len(self.edges[startState][char]) == 1:
-                            # there is only one transition for this character
-                            del self.edges[startState][char]
-                        else:
-                            # there are multiple transitions for this character
-                            self.edges[startState][char].remove(endState)
-
-
-                    return
-        raise Exception("edge does not exist")
-
     """
     we can not have duplicate state names when we determinize some regexes, this function solves this problem
     the way that I generate these NFAs guarentee that states have names 1 to n where n is the number of states
@@ -78,28 +74,38 @@ class NFA():
         newstateid = len(self.states) + 1
         # maps the old state number to the new state number
         stateMap = {}
-        for state in self.states:
+        for state in nfa.states:
             stateMap[state] = newstateid
             newstateid += 1
         
         # deal with the start states
         newstart = set()
-        for state in self.startStates:
+        for state in nfa.startStates:
             newstart.add(stateMap[state])
-        self.startStates = newstart
-        
+        nfa.startStates = newstart
         # deal with accepting states
         newaccept = set()
-        for state in self.acceptingStates:
+        for state in nfa.acceptingStates:
             newaccept.add(stateMap[state])
+        nfa.acceptingStates = newaccept
+        print(str(nfa.edges) + "asdfsegfzsef")
+        newAlphabet = set()
+        newEdges = {}
+        # deal with the edges
+        for startstate in nfa.edges:
+            for letter in nfa.edges[startstate]:
+                for endstate in nfa.edges[startstate][letter]:
+                    NFA.addEdgeToNew(stateMap[startstate], stateMap[endstate], letter, newEdges, newAlphabet)
+                    
+        nfa.alphabet = newAlphabet
+        nfa.edges = newEdges
         
-        # deal witrh the edges
-        for startstate in self.edges:
-            for letter in self.edges[state]:
-                for endstate in self.edges[state][letter]:
-                    self.addEdge(stateMap[startstate], stateMap[endstate], letter)
-                    self.removeEdge(startstate, endstate, letter)
 
+        # deal with states
+        newStates = set()
+        for state in nfa.states:
+            newStates.add(stateMap[state])
+        nfa.states = newStates
         return nfa
 
 
