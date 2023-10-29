@@ -16,7 +16,7 @@ class testToString(unittest.TestCase):
         print(s) 
         nfa = ast.toNfa()
         print(nfa.states)
-        #nfa.convertToImage(20)
+        nfa.convertToImage(20)
         self.assertTrue(s == "(A | B)*")
     
     #((a | b)+ | C)+

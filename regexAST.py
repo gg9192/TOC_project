@@ -57,7 +57,28 @@ class ZeroOrMore:
     "converts the regex to NFA"
     def toNfa(self) -> NFA:
         nfa = self.what.toNfa()
+        newStart = len(nfa.states) + 1
+        newAccept = len(nfa.states) + 2
+        nfa.setStates([newStart,newAccept])
 
+        # connect start to newStart
+        for startstate in nfa.startStates:
+            nfa.addEdge(newStart, startstate, None)
+        
+        # connect acceptings to new accepting
+        for accept in nfa.acceptingStates:
+            nfa.addEdge(accept, newAccept, None)
+
+        sstart = set()
+        sstart.add(newStart)
+        nfa.startStates = sstart
+
+        aacept = set()
+        aacept.add(newAccept)
+        nfa.acceptingStates = aacept
+
+
+        
         # connect all start states to end states (0)
         for startstate in nfa.startStates:
             for acceptstate in nfa.acceptingStates:
