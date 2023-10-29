@@ -106,7 +106,6 @@ class ZeroOrMore:
         for startstate in nfa.startStates:
             for acceptstate in nfa.acceptingStates:
                 nfa.addEdge(acceptstate, startstate, None)
-        print(nfa)
         return nfa
 
 """This represents one regex followed by another"""
@@ -164,7 +163,6 @@ class Or(TreeElement):
     def toNfa(self) -> NFA:
         nfa1 = self.first.toNfa()
         nfa2 = self.second.toNfa()
-        print(nfa2.edges)
         nfa1.makeDisjoint(nfa2)
         # now nfa1 is disjoint
         # add states
@@ -181,11 +179,8 @@ class Or(TreeElement):
         
         # add edges 
         for startstate in nfa2.edges:
-            print("fghx")
             for letter in nfa2.edges[startstate]:
-                print("serd;lohk")
                 for endstate in nfa2.edges[startstate][letter]:
-                    print(letter)
                     nfa1.addEdge(startstate, endstate, letter)
         return nfa1
         
