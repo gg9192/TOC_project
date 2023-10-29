@@ -3,6 +3,24 @@ from regexAST import *
 
 """All tests for regex to NFA"""
 class testToString(unittest.TestCase):
+
+    def buildNFA1(self):
+        nfa = NFA()
+        nfa.setStates([1,2,3,4,5,6])
+        nfa.addEdge(1,2,"A")
+        nfa.addEdge(3,4,"B")
+        nfa.addEdge(5,1,None)
+        nfa.addEdge(5,3,None)
+        nfa.addEdge(2,6,None)
+        nfa.addEdge(4,6,None)
+        nfa.addEdge(5,6,None)
+        nfa.addEdge(6,5,None)
+        nfa.setStartingStates([5])
+        nfa.setAcceptingStates([6])
+        nfa.alphabet.add("A")
+        nfa.alphabet.add("B")
+        return nfa
+
     
     #(A + B)*
     def test_regextoNFA1(self):
@@ -13,11 +31,11 @@ class testToString(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         s = str(ast)
-        print(s) 
         nfa = ast.toNfa()
-        print(nfa.states)
-        nfa.convertToImage(20)
-        self.assertTrue(s == "(A | B)*")
+        correct = self.buildNFA1()
+        print("correct: " + str(correct.edges))
+        print("nfa: " + str(nfa.edges))
+        self.assertTrue(correct == nfa)
     
     #((a | b)+ | C)+
     def test_regextoNFA2(self):

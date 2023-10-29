@@ -12,7 +12,16 @@ class NFA():
         self.alphabet.add(None)
         self.determinized = False
     
-    
+    def __eq__(self, nfa) -> bool:
+        acceptingStates = self.acceptingStates == nfa.acceptingStates
+        startStates = self.startStates == nfa.startStates
+        states = self.states == nfa.states
+        alphabet = self.alphabet == nfa.alphabet
+        edges = self.edges == nfa.edges
+        print(acceptingStates,startStates,states,alphabet,edges)
+        return acceptingStates and startStates and states and alphabet and edges
+
+
 
     """sets the starting states"""
     def setStartingStates(self, states:list):
@@ -88,7 +97,6 @@ class NFA():
         for state in nfa.acceptingStates:
             newaccept.add(stateMap[state])
         nfa.acceptingStates = newaccept
-        print(str(nfa.edges) + "asdfsegfzsef")
         newAlphabet = set()
         newEdges = {}
         # deal with the edges

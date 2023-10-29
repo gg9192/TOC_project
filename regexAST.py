@@ -37,13 +37,31 @@ class OneOrMore(TreeElement):
     "converts the regex to NFA"
     def toNfa(self) -> NFA:
         nfa = self.what.toNfa()
+        newStart = len(nfa.states) + 1
+        newAccept = len(nfa.states) + 2
+        nfa.setStates([newStart,newAccept])
 
-        # don't connect all start states to end states (1)
+        # connect start to newStart
+        for startstate in nfa.startStates:
+            nfa.addEdge(newStart, startstate, None)
+        
+        # connect acceptings to new accepting
+        for accept in nfa.acceptingStates:
+            nfa.addEdge(accept, newAccept, None)
+
+        sstart = set()
+        sstart.add(newStart)
+        nfa.startStates = sstart
+
+        aacept = set()
+        aacept.add(newAccept)
+        nfa.acceptingStates = aacept
+
         # connect all endstate to startstates (or more)
         for startstate in nfa.startStates:
             for acceptstate in nfa.acceptingStates:
                 nfa.addEdge(acceptstate, startstate, None)
-        
+
         return nfa
 
 """This represents zero or more of a given regex"""
@@ -88,7 +106,7 @@ class ZeroOrMore:
         for startstate in nfa.startStates:
             for acceptstate in nfa.acceptingStates:
                 nfa.addEdge(acceptstate, startstate, None)
-
+        print(nfa)
         return nfa
 
 """This represents one regex followed by another"""
