@@ -2,10 +2,10 @@ import unittest
 from nfa import *
 from regexAST import *
 import os
-"""This class tests determinizing NFAs
-"""
-class TestDeterminize(unittest.TestCase):
 
+class TestDeterminize(unittest.TestCase):
+    """This class tests determinizing NFAs
+    """
     def test_determinze1(self):
         a = Just("A")
         b = Just("B")
@@ -14,3 +14,4 @@ class TestDeterminize(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         nfa = ast.toNfa()
+        nfa.determinize()

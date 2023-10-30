@@ -1,11 +1,9 @@
-""" The purpose of this file is to contain all the classes required to build an AST for regex
-    To get more detail, look at the second method.
-"""
 from nfa import *
 # abstract class
 from abc import *
 
 class TreeElement(ABC):
+    """Abstract class for tree element"""
     @abstractmethod
     def __repr__(self):
         pass
@@ -14,8 +12,9 @@ class TreeElement(ABC):
     def toNfa(self) -> NFA:
         pass
 
-"""The purpose of this class is to represent parentheses in regex"""
+
 class Parens(TreeElement):
+    """The purpose of this class is to represent parentheses in regex"""
     def __init__(self, what:TreeElement):
         self.what = what
 
@@ -26,8 +25,9 @@ class Parens(TreeElement):
     def toNfa(self) -> NFA:
         return self.what.toNfa()
 
-"""This represents one or more of a given regex"""
+
 class OneOrMore(TreeElement):
+    """This represents one or more of a given regex"""
     def __init__(self, what:TreeElement):
         self.what = what
 
@@ -64,8 +64,9 @@ class OneOrMore(TreeElement):
 
         return nfa
 
-"""This represents zero or more of a given regex"""
+
 class ZeroOrMore:
+    """This represents zero or more of a given regex"""
     def __init__(self, what:TreeElement):
         self.what = what
 
@@ -108,8 +109,9 @@ class ZeroOrMore:
                 nfa.addEdge(acceptstate, startstate, None)
         return nfa
 
-"""This represents one regex followed by another"""
+
 class Follows(TreeElement):
+    """This represents one regex followed by another"""
     def __init__(self, first:TreeElement, second:TreeElement):
         self.first = first
         self.second = second
@@ -150,8 +152,9 @@ class Follows(TreeElement):
 
 
 
-"""This represents one regex or another"""
+
 class Or(TreeElement):
+    """This represents one regex or another"""
     def __init__(self, first:TreeElement, second:TreeElement):
         self.first = first
         self.second = second
@@ -184,10 +187,8 @@ class Or(TreeElement):
                     nfa1.addEdge(startstate, endstate, letter)
         return nfa1
         
-        
-        
-    
 class Just(TreeElement):
+    """This class represents a single letter in a regex"""
     def __init__(self, what:str):
         self.what = what
     
@@ -204,8 +205,9 @@ class Just(TreeElement):
         return nfa
 
 
-"""This is the class for an abstract syntax tree for regex"""
+
 class RegexAST():
+    """This is the class for an abstract syntax tree for regex"""
     def __init__(self, root:TreeElement):
         self.root = root
 
