@@ -18,7 +18,6 @@ class NFA():
         states = self.states == nfa.states
         alphabet = self.alphabet == nfa.alphabet
         edges = self.edges == nfa.edges
-        print(acceptingStates,startStates,states,alphabet,edges)
         return acceptingStates and startStates and states and alphabet and edges
 
 

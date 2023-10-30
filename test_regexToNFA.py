@@ -101,8 +101,6 @@ class testToString(unittest.TestCase):
         tree = RegexAST(zmm2)
         nfa = tree.toNfa()
         correct = self.buildNFA3()
-        nfa.convertToImage(20)
-        nfa.convertToImage(21)
         print(nfa.edges)
         print(correct.edges)
         self.assertTrue(correct == nfa)
@@ -136,9 +134,6 @@ class testToString(unittest.TestCase):
         nfa.addEdge(12,14,None)
         nfa.addEdge(14,13,None)
 
-        
-
-
     # A+ | ((B | C)* D)+
     def test_regextoNFA4(self):
         a = Just("A")
@@ -156,20 +151,29 @@ class testToString(unittest.TestCase):
         tree = RegexAST(bigOr)
         s = str(tree)
         nfa = tree.toNfa()
-        nfa.convertToImage(30)
         self.assertTrue(s == "A+ | ((B | C)* D)+")
+
+    def buildNFA5(self):
+        nfa = NFA()
+        for i in range(1,7):
+            nfa.setStates([i])
+        nfa.setStartingStates([1])
+        nfa.setAcceptingStates([6])
+        nfa.addEdge(1,2,"A")
+        nfa.addEdge(2,3,None)
+        nfa.addEdge(3,4,"B")
+        nfa.addEdge(4,5,None)
+        nfa.addEdge(5,6,"C")        
+        return nfa
 
     # A B C
     def test_regextoNFA5(self):
-        tree = RegexAST()
-        tree.root = Follows()
-        tree.root.first = Just()
-        tree.root.first.char = "A"
-        f = Follows()
-        tree.root.second = f
-        f.first = Just()
-        f.first.char = "B"
-        f.second = Just()
-        f.second.char = "C"
-        s = str(tree)
-        self.assertTrue(s == "A B C")
+        a = Just("A")
+        b = Just("B")
+        c = Just("C")
+        fol1 = Follows(a,b)
+        fol2 = Follows(fol1, c)
+        tree = RegexAST(fol2)
+        nfa = tree.toNfa()
+        correct = self.buildNFA5()
+        self.assertTrue(nfa == correct)
