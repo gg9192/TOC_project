@@ -107,13 +107,56 @@ class testToString(unittest.TestCase):
         print(correct.edges)
         self.assertTrue(correct == nfa)
         
+    def buildNFA4():
+        nfa = NFA()
+        
+        # set the states
+        for i in range(1,15):
+            nfa.setStates([i])
+
+        # set the starting state
+        nfa.setStartingStates([3,13])
+        nfa.setAcceptingStates([4,14])
+
+        nfa.addEdge(3,1,None)
+        nfa.addEdge(1,2,"A")
+        nfa.addEdge(2,4,None)
+        nfa.addEdge(4,3,None)
+        nfa.addEdge(13,9,None)
+        nfa.addEdge(9,5,None)
+        nfa.addEdge(9,7,None)
+        nfa.addEdge(5,6,"B")
+        nfa.addEdge(7,8,"C")
+        nfa.addEdge(6,10,None)
+        nfa.addEdge(8,10,None)
+        nfa.addEdge(9,10,None)
+        nfa.addEdge(10,9,None)
+        nfa.addEdge(10,11,None)
+        nfa.addEdge(11,12,None)
+        nfa.addEdge(12,14,None)
+        nfa.addEdge(14,13,None)
+
+        
+
+
     # A+ | ((B | C)* D)+
     def test_regextoNFA4(self):
         a = Just("A")
-        oom = OneOrMore(a)
-        b = Just(b)
-        tree = RegexAST()
+        b = Just("B")
+        c = Just("C")
+        d = Just("D")
+        aplus = OneOrMore(a)
+        borc = Or(b,c)
+        innerparen = Parens(borc)
+        zom = ZeroOrMore(innerparen)
+        follows = Follows(zom,d)
+        outerparen = Parens(follows)
+        oor = OneOrMore(outerparen) 
+        bigOr = Or(aplus, oor)
+        tree = RegexAST(bigOr)
         s = str(tree)
+        nfa = tree.toNfa()
+        nfa.convertToImage(30)
         self.assertTrue(s == "A+ | ((B | C)* D)+")
 
     # A B C

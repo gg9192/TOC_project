@@ -124,8 +124,8 @@ class Follows(TreeElement):
         nfa2 = nfa1.makeDisjoint(nfa2)
 
         # add states
-        for state in nfa2.states():
-            nfa1.setStates(state)
+        for state in nfa2.states:
+            nfa1.setStates([state])
 
         # deal with the edges
         for startstate in nfa2.edges:
