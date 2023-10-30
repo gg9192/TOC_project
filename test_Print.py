@@ -1,32 +1,35 @@
 import unittest
 from nfa import *
 import os
-"""This class draws NFAs to test, responsibility is on the user
-   To verify correctness
-"""
+
 class DrawGraphs (unittest.TestCase):
-   
-    """Removes all files from output dir"""
+    """
+    This class draws NFAs to test, responsibility is on the user
+    To verify correctness
+    """
+    
     @classmethod
     def setup_class():
+        """Removes all files from output dir"""
         os.chdir("./images")
         ls = os.listdir()
         for file in ls:
             os.remove(file)
         os.chdir("..")
 
-    """
-    Builds the following NFA:
-    Q = {1,2,3,4}
-    Alphabet = {a,b,c}
-    R(a) = {(1,3),(2,4),(4,1),(2,3)}
-    R(b) = {(2,3),(4,2),(1,4)}
-    R(c) = {(2,4),(1,2),(3,4)}
-    s = {1,3}
-    f = {2,4}
-    correct
-    """
+    
     def buildGraph1(self):
+        """
+        Builds the following NFA:
+        Q = {1,2,3,4}
+        Alphabet = {a,b,c}
+        R(a) = {(1,3),(2,4),(4,1),(2,3)}
+        R(b) = {(2,3),(4,2),(1,4)}
+        R(c) = {(2,4),(1,2),(3,4)}
+        s = {1,3}
+        f = {2,4}
+        correct
+        """
         nfa = NFA()
         nfa.setStates([1,2,3,4])
         nfa.setStartingStates([1,3])
@@ -44,18 +47,19 @@ class DrawGraphs (unittest.TestCase):
         nfa.convertToImage(1)
         self.assertTrue(True)  
     
-    """
-    Builds the following NFA:
-    Q = {1,2,3}
-    Alphabet = {a,b,c}
-    R(a) = {(1,1),(1,2),(1,3)}
-    R(b) = {(2,1),(2,2),(2,3)}
-    R(c) = {(3,1),(3,2),(3,3)}
-    s = {1,3}
-    f = {2}
-    correct
-    """
+    
     def buildGraph2(self):
+        """
+        Builds the following NFA:
+        Q = {1,2,3}
+        Alphabet = {a,b,c}
+        R(a) = {(1,1),(1,2),(1,3)}
+        R(b) = {(2,1),(2,2),(2,3)}
+        R(c) = {(3,1),(3,2),(3,3)}
+        s = {1,3}
+        f = {2}
+        correct
+        """
         nfa = NFA()
         nfa.setStates([1,2,3])
         nfa.setStartingStates([1,3])
@@ -73,18 +77,19 @@ class DrawGraphs (unittest.TestCase):
         nfa.convertToImage(2)
         self.assertTrue(True) 
 
-    """
-    Builds the following NFA:
-    Q = {1,2,3}
-    Alphabet = {a,b}
-    R(a) = {(1,2),(3,4)}
-    R(b) = {(4,1),(2,2)}
-    R(c) = {(3,2),(3,3)}
-    s = {1,2}
-    f = {3}
-    correct
-    """
+    
     def buildGraph3(self):
+        """
+        Builds the following NFA:
+        Q = {1,2,3}
+        Alphabet = {a,b}
+        R(a) = {(1,2),(3,4)}
+        R(b) = {(4,1),(2,2)}
+        R(c) = {(3,2),(3,3)}
+        s = {1,2}
+        f = {3}
+        correct
+        """
         nfa = NFA()
         nfa.setStates([1,2,3])
         nfa.setStartingStates([1,2])
@@ -104,16 +109,17 @@ class DrawGraphs (unittest.TestCase):
 
 
 
-    """
-    Tests Epsilon transitions can be rendered correctly
-    Builds the following NFA:
-    Q = {1,2,3}
-    Alphabet = {}
-    R(ϵ) = {(1,2),(2,3),(3,4)}
-    s = {1,2}
-    f = {3}
-    """
+    
     def buildGraph4(self):
+        """
+        Tests Epsilon transitions can be rendered correctly
+        Builds the following NFA:
+        Q = {1,2,3}
+        Alphabet = {}
+        R(ϵ) = {(1,2),(2,3),(3,4)}
+        s = {1,2}
+        f = {3}
+        """
         nfa = NFA()
         nfa.setStates([1,2,3])
         nfa.setStartingStates([1,2])
@@ -127,19 +133,20 @@ class DrawGraphs (unittest.TestCase):
         nfa.convertToImage(4)
         self.assertTrue(True) 
 
-    """
-    Tests Epsilon transitions in graph
-    Builds the following NFA:
-    Q = {1,2,3}
-    Alphabet = {a,b}
-    R(a) = {(1,2),(3,1)}
-    R(b) = {(3,1),(1,2)}:
-    R(ϵ) = {(3,2),(1,3)}
-    s = {1,2}
-    f = {3}
-    correct
-    """
+    
     def buildGraph5(self):
+        """
+        Tests Epsilon transitions in graph
+        Builds the following NFA:
+        Q = {1,2,3}
+        Alphabet = {a,b}
+        R(a) = {(1,2),(3,1)}
+        R(b) = {(3,1),(1,2)}:
+        R(ϵ) = {(3,2),(1,3)}
+        s = {1,2}
+        f = {3}
+        correct
+        """
         nfa = NFA()
         nfa.setStates([1,2,3])
         nfa.setStartingStates([1,2])

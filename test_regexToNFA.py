@@ -1,9 +1,9 @@
 import unittest
 from regexAST import *
 
-"""All tests for regex to NFA"""
-class RegexToNFA(unittest.TestCase):
 
+class RegexToNFA(unittest.TestCase):
+    """All tests for regex to NFA, all testcases handbuilt/tested for correcness"""
     def buildNFA1(self):
         nfa = NFA()
         nfa.setStates([1,2,3,4,5,6])

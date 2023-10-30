@@ -1,7 +1,8 @@
 import graphviz 
 import os
-"""This class represents"an NFA"""
+
 class NFA():
+    """This class represents an NFA"""
     def __init__(self):
         # Nested hashmap, first we give the startstate, then we give the letter. We get the destsate
         self.edges = {}
@@ -20,17 +21,17 @@ class NFA():
         edges = self.edges == nfa.edges
         return acceptingStates and startStates and states and alphabet and edges
 
-
-
-    """sets the starting states"""
     def setStartingStates(self, states:list):
+        """sets the starting states"""
         for state in states:
             if state not in self.states:
                 raise Exception("Starting states must be a subset of states, perhaps you didn't set your states first")
             self.startStates.add(state)
     
-    """Adds the given edge to the dictionary, and update the new alphabet set"""
+    
     def addEdgeToNew(sourceState:int, destState:int,  char:str, newEdges:dict, newAlphabet: set):
+        """Adds the given edge to the dictionary, and update the new alphabet set"""
+
         if char not in newAlphabet:
             # add the character to the alphabet
             newAlphabet.add(char)
@@ -52,8 +53,9 @@ class NFA():
             newEdges[sourceState] = mapp
 
     
-    """Adds the given edge to the NFA"""
+    
     def addEdge(self, sourceState:int, destState:int,  char:str):
+        """Adds the given edge to the NFA"""
         if char not in self.alphabet:
             # add the character to the alphabet
             self.alphabet.add(char)
@@ -74,11 +76,12 @@ class NFA():
             mapp[char] = s
             self.edges[sourceState] = mapp
 
-    """
-    we can not have duplicate state names when we determinize some regexes, this function solves this problem
-    the way that I generate these NFAs guarentee that states have names 1 to n where n is the number of states
-    """
+    
     def makeDisjoint(self, nfa):
+        """
+        we can not have duplicate state names when we determinize some regexes, this function solves this problem
+        the way that I generate these NFAs guarentee that states have names 1 to n where n is the number of states
+        """
         newstateid = len(self.states) + 1
         # maps the old state number to the new state number
         stateMap = {}
@@ -116,24 +119,27 @@ class NFA():
         return nfa
 
 
-    """sets the states of the NFA"""
+    
     def setStates(self, states:list):
+        """sets the states of the NFA"""
         for state in states:
             self.states.add(state)
 
-    """sets the accepting states"""
+    
     def setAcceptingStates(self,states:list):
+        """sets the accepting states"""
         for state in states:
             if state not in self.states:
                 raise Exception("Starting states must be a subset of states, perhaps you didn't set your states first")
             self.acceptingStates.add(state)
         
 
-    """this assumes you have graphviz installed.
-       outputs both a png and a gv file
-       the id is for a uniqueid
-    """
+
     def convertToImage(self, id:int):
+        """this assumes you have graphviz installed.
+        outputs both a png and a gv file
+        the id is for a uniqueid
+        """
         graphviz.charset = 'utf-8'
         dot = graphviz.Digraph(name = "nfa", )
         #create a hidden start node, this helps us point to the start state
@@ -165,16 +171,20 @@ class NFA():
         
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
-
+    
     def determinize(self):
         # I know the nested functions is messy, but the alternative is to pass a pointer
         # of a hashmap around for epsilon cache
-       
-        """
-        converts a given state to the int id associated with the state
-        returns a negative nummber if no state was found
-        """
+        """determinizes the NFA"""
+
+
+
+        
         def stateToID(state:set) -> int:
+            """
+            converts a given state to the int id associated with the state
+            returns a negative number if no state was found
+            """
             i = 0
             for statee in states:
                 if statee == state:
@@ -210,5 +220,6 @@ class NFA():
         # null state
         for char in self.alphabet:
             nfa.addEdge(stateToID(None), stateToID(None), char)
+        print(getEpsilonClosure())
 
 
