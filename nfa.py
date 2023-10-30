@@ -166,4 +166,49 @@ class NFA():
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
 
+    def determinize(self):
+        # I know the nested functions is messy, but the alternative is to pass a pointer
+        # of a hashmap around for epsilon cache
+       
+        """
+        converts a given state to the int id associated with the state
+        returns a negative nummber if no state was found
+        """
+        def stateToID(state:set) -> int:
+            i = 0
+            for statee in states:
+                if statee == state:
+                    return i + 1
+                else:
+                    i += 1
+
+            return -1
+
+        def closureHelper(state:int, active:set):
+            active.add(state)
+            returnset = set()
+            returnset.add(state)
+            for endstate in self.edges[None]:
+                tempset = closureHelper(endstate,active)
+                returnset.union(tempset)
+            epsiloncache[state] = returnset
+            return returnset
+            
+
+        def getEpsilonClosure(state:int):
+            active = {}
+            return closureHelper(state, active)
+
+
+        
+        # unfortunatly, we can't hash a set, represent sets of states as list of sets
+        # in the edges hashmap, the index of the state is the id - 1, see state to ID
+        states = [None]
+        nfa = NFA()
+        epsiloncache = {}
+
+        # null state
+        for char in self.alphabet:
+            nfa.addEdge(stateToID(None), stateToID(None), char)
+
 

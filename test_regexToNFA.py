@@ -2,7 +2,7 @@ import unittest
 from regexAST import *
 
 """All tests for regex to NFA"""
-class testToString(unittest.TestCase):
+class RegexToNFA(unittest.TestCase):
 
     def buildNFA1(self):
         nfa = NFA()
@@ -28,7 +28,6 @@ class testToString(unittest.TestCase):
         p = Parens(orr)
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
-        s = str(ast)
         nfa = ast.toNfa()
         correct = self.buildNFA1()
         self.assertTrue(correct == nfa)
