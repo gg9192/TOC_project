@@ -67,7 +67,6 @@ class RegexToNFA(unittest.TestCase):
         nfa = tree.toNfa()
         
         correct = self.buildNFA2()
-        print(nfa,correct)
         self.assertTrue(correct == nfa)
 
     def buildNFA3(self):
@@ -100,8 +99,6 @@ class RegexToNFA(unittest.TestCase):
         tree = RegexAST(zmm2)
         nfa = tree.toNfa()
         correct = self.buildNFA3()
-        print(nfa.edges)
-        print(correct.edges)
         self.assertTrue(correct == nfa)
         
     def buildNFA4():
