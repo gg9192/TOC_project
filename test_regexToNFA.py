@@ -32,7 +32,6 @@ class RegexToNFA(unittest.TestCase):
         ast = RegexAST(zom)
         nfa = ast.toNfa()
         correct = self.buildNFA1()
-        nfa.convertToImage(30)
         self.assertTrue(correct == nfa)
     
     def buildNFA2(self):

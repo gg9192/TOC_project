@@ -3,13 +3,9 @@ from nfa import *
 from regexAST import *
 
 class TestDeterminize(unittest.TestCase):
-    """This class tests determinizing NFAs
     """
-    @pytest.fixture(scope="session")
-    def my_fixture():
-        print('INITIALIZATION')
-        yield 2
-        print('TEAR DOWN')
+    This class tests determinizing NFAs
+    """
 
     def test_determinze1(self):
         #(A | B)*
@@ -20,5 +16,5 @@ class TestDeterminize(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         nfa = ast.toNfa()
-        
         nfa.determinize()
+        nfa.convertToImage
