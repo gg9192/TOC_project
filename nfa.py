@@ -1,5 +1,5 @@
 import graphviz 
-import os
+import pytest
 
 class NFA():
     """This class represents an NFA"""
@@ -171,14 +171,26 @@ class NFA():
         
         dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
+    def gri(self,state:int, char:str)-> set:
+            """gets the relational image for 1 character and number"""
+            if char in self.edges[state]:
+                return self.edges[state][char]
+            else:
+                return set()
     
+    def getRelationalImage(self, state:set, char:str) -> set:
+        """gets the relational image for 1 character and set of states"""
+        s = set()
+        for i in state:
+            temp = self.gri(i,char)
+            s = temp.union(s)
+        return s
+        
+
     def determinize(self):
         # I know the nested functions is messy, but the alternative is to pass a pointer
-        # of a hashmap around for epsilon cache
+        # of a hashmap around for epsilon cache, dynamic programming
         """determinizes the NFA"""
-
-
-
         
         def stateToID(state:set) -> int:
             """
@@ -195,31 +207,96 @@ class NFA():
             return -1
 
         def closureHelper(state:int, active:set):
+            """DFS recursive solution with caching"""
             active.add(state)
             returnset = set()
             returnset.add(state)
-            for endstate in self.edges[None]:
-                tempset = closureHelper(endstate,active)
-                returnset.union(tempset)
+            
+            if None in self.edges[state]:
+                for endstate in self.edges[state][None]:
+                    print()
+                    # prevent infinate recursion
+                    if endstate not in active:
+                        if endstate in epsiloncache:
+                            print("cache hit")
+                            tempset = epsiloncache[endstate]
+                            returnset = returnset.union(tempset)
+                        else:
+                            tempset = closureHelper(endstate,active)
+                            returnset = returnset.union(tempset)
+                    else:
+                        # note that we can reach the state in the returnset for a correct cache
+                        returnset.add(endstate)
             epsiloncache[state] = returnset
             return returnset
             
 
-        def getEpsilonClosure(state:int):
-            active = {}
+        def gec(state:int) -> set:
+            """getEpsilonClosure but for 1 state"""
+            active = set()
             return closureHelper(state, active)
+        
+        def getEpsilonClosure(state: set) -> set:
+            """
+            Gets the epsilon closure of a given set of states
+            """
+            s = set()
+            for i in state:
+                if i in epsiloncache:
+                    temp = epsiloncache[i]
+                    s = s.union(temp)
+                else:
+                    temp = gec(i)
+                    s = s.union(temp)
+            return s
 
+        def addState(state:set) -> int:
+            """Given the state as a set, add the state to the nfa and states array, returns the int id of the set"""
+            states.append(state)
+            i = stateToID(state)
+            return i
+        
+        def buildDFAHelper(startState:set, dfa):
+
+            dfa = NFA()
+            dfa.determinized = True
+            startState = getEpsilonClosure(startState)
+            for char in self.alphabet:
+                if char == None:
+                    # skip epsilon
+                    continue
+                state = getEpsilonClosure(self.getRelationalImage(startState,char))
+                if state in states:
+                    # we already have explored this state, don't recurse
+                    source = stateToID(startState)
+                    dest = stateToID(state)
+                    dfa.addEdge(source, dest, char)
+                else:
+                    dest = addState(state)
+                    source = stateToID(startState)
+                    dfa.addEdge(source, dest, char)
+                    buildDFAHelper(state,dfa)
+                
+
+        def buildDFA(startState:set):
+            """this function builds the DFA, given the start state"""
+            dfa = NFA()
+            buildDFAHelper(startState, dfa)
+            return dfa
 
         
+
         # unfortunatly, we can't hash a set, represent sets of states as list of sets
         # in the edges hashmap, the index of the state is the id - 1, see state to ID
         states = [None]
         nfa = NFA()
+        # maps state:int to cached set of epsilon closure
         epsiloncache = {}
 
         # null state
         for char in self.alphabet:
             nfa.addEdge(stateToID(None), stateToID(None), char)
-        print(getEpsilonClosure())
-
-
+        start = addState(getEpsilonClosure(self.startStates))
+        dfa = buildDFA(self.startStates)
+        
+        

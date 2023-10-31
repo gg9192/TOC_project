@@ -3,20 +3,6 @@ from nfa import *
 import os
 
 class DrawGraphs (unittest.TestCase):
-    """
-    This class draws NFAs to test, responsibility is on the user
-    To verify correctness
-    """
-    
-    @classmethod
-    def setup_class():
-        """Removes all files from output dir"""
-        os.chdir("./images")
-        ls = os.listdir()
-        for file in ls:
-            os.remove(file)
-        os.chdir("..")
-
     
     def buildGraph1(self):
         """

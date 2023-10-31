@@ -1,5 +1,6 @@
 import unittest
 from regexAST import *
+from nfa import *
 
 
 class RegexToNFA(unittest.TestCase):
@@ -20,8 +21,9 @@ class RegexToNFA(unittest.TestCase):
         return nfa
 
     
-    #(A | B)*
+    
     def test_regextoNFA1(self):
+        """(A | B)*"""
         a = Just("A")
         b = Just("B")
         orr = Or(a,b)
@@ -30,6 +32,7 @@ class RegexToNFA(unittest.TestCase):
         ast = RegexAST(zom)
         nfa = ast.toNfa()
         correct = self.buildNFA1()
+        nfa.convertToImage(30)
         self.assertTrue(correct == nfa)
     
     def buildNFA2(self):
@@ -52,8 +55,9 @@ class RegexToNFA(unittest.TestCase):
             nfa.setAcceptingStates([10])
             return nfa
 
-    #((A | B)+ | C)+
+    
     def test_regextoNFA2(self):
+        """((A | B)+ | C)+"""
         a = Just("A")
         b = Just("B")
         orr = Or(a,b)
@@ -88,8 +92,9 @@ class RegexToNFA(unittest.TestCase):
         return nfa
         
 
-    # (A+ | B)*
+    
     def test_regextoNFA3(self):
+        """# (A+ | B)*"""
         a = Just("A")
         b = Just("B")
         oom = OneOrMore(a)
@@ -130,8 +135,8 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(12,14,None)
         nfa.addEdge(14,13,None)
 
-    # A+ | ((B | C)* D)+
     def test_regextoNFA4(self):
+        """A+ | ((B | C)* D)+"""
         a = Just("A")
         b = Just("B")
         c = Just("C")
@@ -162,8 +167,9 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(5,6,"C")        
         return nfa
 
-    # A B C
+    
     def test_regextoNFA5(self):
+        """A B C"""
         a = Just("A")
         b = Just("B")
         c = Just("C")
