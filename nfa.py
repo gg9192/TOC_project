@@ -1,5 +1,6 @@
 import graphviz 
 import pytest
+from typing import Optional
 
 class NFA():
     """This class represents an NFA"""
@@ -56,6 +57,8 @@ class NFA():
     
     def addEdge(self, sourceState:int, destState:int,  char:str):
         """Adds the given edge to the NFA"""
+        if sourceState not in self.states or destState not in self.states:
+            raise Exception("Source or dest not in edges, can't add edge")
         if char not in self.alphabet:
             # add the character to the alphabet
             self.alphabet.add(char)
@@ -161,7 +164,7 @@ class NFA():
                     # check error states
                     if letter not in self.alphabet:
                         raise Exception("The letter is not in the alphabet, can not draw!")
-                    if state not in self.states or endstate not in self.states:
+                    if startstate not in self.states or endstate not in self.states:
                         raise Exception("Start or end state does not exist, can not draw!")
                     # epsilon
                     if letter == None:
@@ -178,18 +181,17 @@ class NFA():
             else:
                 return set()
     
-    def getRelationalImage(self, state:set, char:str) -> set:
+    def getRelationalImage(self, state:set, char:str) -> Optional[set]:
         """gets the relational image for 1 character and set of states"""
         s = set()
         for i in state:
             temp = self.gri(i,char)
             s = temp.union(s)
-        return s
+        return s if len(s) != 0 else None
         
 
     def determinize(self):
-        # I know the nested functions is messy, but the alternative is to pass a pointer
-        # of a hashmap around for epsilon cache, dynamic programming
+        # this is the best I can do for private methods, none of the sub-methods can be accessed outside of the method
         """determinizes the NFA"""
         
         def stateToID(state:set) -> int:
@@ -204,7 +206,7 @@ class NFA():
                 else:
                     i += 1
 
-            return -1
+            raise Exception("State not found: " + str(state) + " " + str(states))
 
         def closureHelper(state:int, active:set):
             """DFS recursive solution with caching"""
@@ -214,20 +216,13 @@ class NFA():
             
             if None in self.edges[state]:
                 for endstate in self.edges[state][None]:
-                    print()
                     # prevent infinate recursion
                     if endstate not in active:
-                        if endstate in epsiloncache:
-                            print("cache hit")
-                            tempset = epsiloncache[endstate]
-                            returnset = returnset.union(tempset)
-                        else:
-                            tempset = closureHelper(endstate,active)
-                            returnset = returnset.union(tempset)
+                        tempset = closureHelper(endstate,active)
+                        returnset = returnset.union(tempset)
                     else:
                         # note that we can reach the state in the returnset for a correct cache
                         returnset.add(endstate)
-            epsiloncache[state] = returnset
             return returnset
             
 
@@ -236,31 +231,37 @@ class NFA():
             active = set()
             return closureHelper(state, active)
         
-        def getEpsilonClosure(state: set) -> set:
+        def getEpsilonClosure(state: Optional[set]) -> Optional[set]:
             """
             Gets the epsilon closure of a given set of states
             """
+            if state == None:
+                return None
             s = set()
             for i in state:
                 if i in epsiloncache:
+                    print("CACHE HIT")
                     temp = epsiloncache[i]
                     s = s.union(temp)
                 else:
                     temp = gec(i)
+                    epsiloncache[i] = temp
                     s = s.union(temp)
             return s
 
-        def addState(state:set) -> int:
-            """Given the state as a set, add the state to the nfa and states array, returns the int id of the set"""
+        def addState(state:set, dfa) -> int:
+            """Given the state as a set, add the state to the dfa and states array, returns the int id of the set"""
             states.append(state)
             i = stateToID(state)
+            dfa.setStates([i])
             return i
         
+        def printStateMap():
+            """prints the current maping of state id to set"""
+            for i in range(0, len(states)):
+                print(i + 1, states[i])
+        
         def buildDFAHelper(startState:set, dfa):
-
-            dfa = NFA()
-            dfa.determinized = True
-            startState = getEpsilonClosure(startState)
             for char in self.alphabet:
                 if char == None:
                     # skip epsilon
@@ -272,7 +273,7 @@ class NFA():
                     dest = stateToID(state)
                     dfa.addEdge(source, dest, char)
                 else:
-                    dest = addState(state)
+                    dest = addState(state, dfa)
                     source = stateToID(startState)
                     dfa.addEdge(source, dest, char)
                     buildDFAHelper(state,dfa)
@@ -281,22 +282,55 @@ class NFA():
         def buildDFA(startState:set):
             """this function builds the DFA, given the start state"""
             dfa = NFA()
-            buildDFAHelper(startState, dfa)
+            dfa.setStates([1])
+            start = getEpsilonClosure(self.startStates)
+            startID = addState(start, dfa)
+            dfa.setStartingStates([startID])
+            for char in self.alphabet:
+                if char == None:
+                    continue
+                dfa.addEdge(stateToID(None), stateToID(None), char)
+            buildDFAHelper(start, dfa)
             return dfa
 
+        def isAcceptingState(state:set) -> bool:
+            """given a state as a set of states, 
+            determine if its a accepting state"""
+            for i in state:
+                if i in self.acceptingStates:
+                    return True
+            return False
         
+        def removeNullIfNeeded(dfa) -> None:
+            """given a dfa"""
+            for startstate in dfa.edges:
+                for char in dfa.edges[startstate]:
+                    for endstate in dfa.edges[startstate][char]:
+                        if endstate == 1 and startstate != 1:
+                            return
+            dfa.states.remove(1)
+            del dfa.edges[1]
+
+            
 
         # unfortunatly, we can't hash a set, represent sets of states as list of sets
         # in the edges hashmap, the index of the state is the id - 1, see state to ID
         states = [None]
-        nfa = NFA()
         # maps state:int to cached set of epsilon closure
         epsiloncache = {}
-
-        # null state
-        for char in self.alphabet:
-            nfa.addEdge(stateToID(None), stateToID(None), char)
-        start = addState(getEpsilonClosure(self.startStates))
+        
         dfa = buildDFA(self.startStates)
+        i = 0
+        for state in states:
+            if state == None:
+                i += 1
+                continue
+            if isAcceptingState(state):
+                dfa.setAcceptingStates([i + 1])
+            i += 1
+        printStateMap()
+        removeNullIfNeeded(dfa)
+        print(epsiloncache)
+        return dfa
         
         

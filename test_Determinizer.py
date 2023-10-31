@@ -16,5 +16,6 @@ class TestDeterminize(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         nfa = ast.toNfa()
-        nfa.determinize()
-        nfa.convertToImage
+        # nfa.alphabet.add("C")
+        dfa = nfa.determinize()
+        dfa.convertToImage(30)
