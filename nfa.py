@@ -173,7 +173,7 @@ class NFA():
                     else:
                         dot.edge(str(startstate), str(endstate), label=letter)
         
-        dot.render("./regex_nfas/nfa_" + str(id) + ".gv", format = "png")
+        dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
     
     def gri(self,state:int, char:str)-> set:
             """gets the relational image for 1 character and number"""

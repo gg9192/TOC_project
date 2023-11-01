@@ -89,4 +89,4 @@ class TestDeterminize(unittest.TestCase):
         paren = Parens(orr)
         zmm2 = ZeroOrMore(paren)
         tree = RegexAST(zmm2)
-        nfa = tree.toNfa().determinize().convertToImage(32)
+        nfa = tree.toNfa()
