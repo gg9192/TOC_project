@@ -20,7 +20,12 @@ class NFA():
         states = self.states == nfa.states
         alphabet = self.alphabet == nfa.alphabet
         edges = self.edges == nfa.edges
-        print(acceptingStates, startStates, states, alphabet, edges)
+        if self.edges != nfa.edges:
+            for start in nfa.edges:
+                for char in nfa.edges[start]:
+                    for end in nfa.edges[start][char]:
+                        if end not in self.edges[start][char]:
+                            raise Exception(start, char, end)
         return acceptingStates and startStates and states and alphabet and edges
 
     def setStartingStates(self, states:list):
