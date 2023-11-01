@@ -14,13 +14,12 @@ class NFA():
         self.determinized = False
     
     def __eq__(self, nfa) -> bool:
-        print(self.acceptingStates,nfa.acceptingStates)
         acceptingStates = self.acceptingStates == nfa.acceptingStates
         startStates = self.startStates == nfa.startStates
         states = self.states == nfa.states
         alphabet = self.alphabet == nfa.alphabet
         edges = self.edges == nfa.edges
-        print(self.edges, nfa.edges)
+        print(acceptingStates,startStates,states,alphabet,edges)
         return acceptingStates and startStates and states and alphabet and edges
 
     def setStartingStates(self, states:list):
