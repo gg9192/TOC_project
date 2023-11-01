@@ -18,6 +18,7 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(6,5,None)
         nfa.setStartingStates([5])
         nfa.setAcceptingStates([6])
+        nfa.convertToImage(1)
         return nfa
 
     
@@ -32,7 +33,6 @@ class RegexToNFA(unittest.TestCase):
         ast = RegexAST(zom)
         nfa = ast.toNfa()
         correct = self.buildNFA1()
-        nfa.convertToImage(31)
         self.assertTrue(correct == nfa)
     
     def buildNFA2(self):
@@ -53,6 +53,7 @@ class RegexToNFA(unittest.TestCase):
             nfa.addEdge(10,9,None)
             nfa.setStartingStates([9])
             nfa.setAcceptingStates([10])
+            nfa.convertToImage(2)
             return nfa
 
     
@@ -68,6 +69,7 @@ class RegexToNFA(unittest.TestCase):
         outerparens = Parens(orr2)
         oom2 = OneOrMore(outerparens)
         tree = RegexAST(oom2)
+        nfa = tree.toNfa()
         nfa = tree.toNfa()
         
         correct = self.buildNFA2()
@@ -89,6 +91,7 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(6,8,None)
         nfa.addEdge(8,7,None)
         nfa.addEdge(7,8,None)
+        nfa.convertToImage(3)
         return nfa
         
 
@@ -106,7 +109,7 @@ class RegexToNFA(unittest.TestCase):
         correct = self.buildNFA3()
         self.assertTrue(correct == nfa)
         
-    def buildNFA4():
+    def buildNFA4(self):
         nfa = NFA()
         
         # set the states
@@ -131,9 +134,11 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(9,10,None)
         nfa.addEdge(10,9,None)
         nfa.addEdge(10,11,None)
-        nfa.addEdge(11,12,None)
+        nfa.addEdge(11,12,"D")
         nfa.addEdge(12,14,None)
         nfa.addEdge(14,13,None)
+        nfa.convertToImage(4)
+        return nfa
 
     def test_regextoNFA4(self):
         """A+ | ((B | C)* D)+"""
@@ -150,9 +155,10 @@ class RegexToNFA(unittest.TestCase):
         oor = OneOrMore(outerparen) 
         bigOr = Or(aplus, oor)
         tree = RegexAST(bigOr)
-        s = str(tree)
         nfa = tree.toNfa()
-        self.assertTrue(s == "A+ | ((B | C)* D)+")
+        correct = self.buildNFA4()
+        nfa.convertToImage(33)
+        self.assertTrue(correct == nfa)
 
     def buildNFA5(self):
         nfa = NFA()
@@ -164,7 +170,8 @@ class RegexToNFA(unittest.TestCase):
         nfa.addEdge(2,3,None)
         nfa.addEdge(3,4,"B")
         nfa.addEdge(4,5,None)
-        nfa.addEdge(5,6,"C")        
+        nfa.addEdge(5,6,"C")  
+        nfa.convertToImage(5)      
         return nfa
 
     

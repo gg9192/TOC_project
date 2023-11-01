@@ -1,5 +1,4 @@
 import graphviz 
-import pytest
 from typing import Optional
 
 class NFA():
@@ -88,7 +87,12 @@ class NFA():
         newstateid = len(self.states) + 1
         # maps the old state number to the new state number
         stateMap = {}
-        for state in nfa.states:
+
+        # set iteration is random, if we want to test this, we need to ensure that the new state names
+        # are assigned to the same states every time 
+        states = list(nfa.states)
+        states.sort()
+        for state in states:
             stateMap[state] = newstateid
             newstateid += 1
         
@@ -127,7 +131,6 @@ class NFA():
         """sets the states of the NFA"""
         for state in states:
             self.states.add(state)
-
     
     def setAcceptingStates(self,states:list):
         """sets the accepting states"""
@@ -135,8 +138,6 @@ class NFA():
             if state not in self.states:
                 raise Exception("Starting states must be a subset of states, perhaps you didn't set your states first")
             self.acceptingStates.add(state)
-        
-
 
     def convertToImage(self, id:int):
         """this assumes you have graphviz installed.
@@ -172,7 +173,7 @@ class NFA():
                     else:
                         dot.edge(str(startstate), str(endstate), label=letter)
         
-        dot.render("./images/nfa_" + str(id) + ".gv", format = "png")
+        dot.render("./regex_nfas/nfa_" + str(id) + ".gv", format = "png")
     
     def gri(self,state:int, char:str)-> set:
             """gets the relational image for 1 character and number"""
@@ -261,8 +262,12 @@ class NFA():
             for i in range(0, len(states)):
                 print(i + 1, states[i])
         
-        def buildDFAHelper(startState:set, dfa):
-            for char in self.alphabet:
+        def buildDFAHelper(startState:set, dfa, alphabet:list):
+            """dfa helper """
+
+            # set iteration is random, if we want to test this, we need to ensure that the new state names
+            
+            for char in alphabet:
                 if char == None:
                     # skip epsilon
                     continue
@@ -276,10 +281,15 @@ class NFA():
                     dest = addState(state, dfa)
                     source = stateToID(startState)
                     dfa.addEdge(source, dest, char)
-                    buildDFAHelper(state,dfa)
+                    buildDFAHelper(state,dfa, alphabet)
                 
 
         def buildDFA(startState:set):
+            # are assigned to the same states every time 
+            alphabet = list(self.alphabet)
+            alphabet.remove(None)
+            alphabet.sort()
+            alphabet = [None] + alphabet
             """this function builds the DFA, given the start state"""
             dfa = NFA()
             dfa.setStates([1])
@@ -290,7 +300,7 @@ class NFA():
                 if char == None:
                     continue
                 dfa.addEdge(stateToID(None), stateToID(None), char)
-            buildDFAHelper(start, dfa)
+            buildDFAHelper(start, dfa, alphabet)
             return dfa
 
         def isAcceptingState(state:set) -> bool:

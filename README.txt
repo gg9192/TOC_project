@@ -10,7 +10,7 @@ Tooling: Python
 Sources: 
 nfa.py contains a class definition for an NFA
 regexAST contains classes for a regex ast
-test_project contains unit tests
+test_*.py contains unit tests
 
 Required functions: list and briefly describe the functions you wrote to satisfy the various
 parts of the project (as listed above, in their respective sections)

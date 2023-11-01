@@ -1,0 +1,18 @@
+digraph nfa {
+	Start [label="" shape=none]
+	1 [label=1 shape=plaintext]
+	2 [label=2 shape=plaintext]
+	3 [label=3 shape=plaintext]
+	4 [label=4 shape=plaintext]
+	5 [label=5 shape=plaintext]
+	6 [label=6 shape=circle]
+	Start -> 5
+	1 -> 2 [label=A]
+	3 -> 4 [label=B]
+	5 -> 1 [label="ϵ"]
+	5 -> 3 [label="ϵ"]
+	5 -> 6 [label="ϵ"]
+	2 -> 6 [label="ϵ"]
+	4 -> 6 [label="ϵ"]
+	6 -> 5 [label="ϵ"]
+}
