@@ -20,12 +20,7 @@ class NFA():
         states = self.states == nfa.states
         alphabet = self.alphabet == nfa.alphabet
         edges = self.edges == nfa.edges
-        if self.edges != nfa.edges:
-            for start in nfa.edges:
-                for char in nfa.edges[start]:
-                    for end in nfa.edges[start][char]:
-                        if end not in self.edges[start][char]:
-                            raise Exception(start, char, end)
+        print(self.edges, nfa.edges)
         return acceptingStates and startStates and states and alphabet and edges
 
     def setStartingStates(self, states:list):
@@ -184,6 +179,8 @@ class NFA():
     
     def gri(self,state:int, char:str)-> set:
             """gets the relational image for 1 character and number"""
+            if state not in self.edges:
+                return set()
             if char in self.edges[state]:
                 return self.edges[state][char]
             else:
@@ -221,7 +218,9 @@ class NFA():
             active.add(state)
             returnset = set()
             returnset.add(state)
-            
+            if state not in self.edges:
+                returnset.add(state)
+                return returnset
             if None in self.edges[state]:
                 for endstate in self.edges[state][None]:
                     # prevent infinate recursion
