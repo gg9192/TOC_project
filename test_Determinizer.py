@@ -80,6 +80,19 @@ class TestDeterminize(unittest.TestCase):
         correct = self.buildDfa2()
         self.assertTrue(correct == dfa)
         
+    def buildDfa3(self):
+        dfa = NFA()
+        dfa.setStates([2,3,4])
+        dfa.setAcceptingStates([2,3,4])
+        dfa.setStartingStates([2])
+        dfa.addEdge(2,3,"A")
+        dfa.addEdge(2,4,"B")       
+        dfa.addEdge(3,3,"A")
+        dfa.addEdge(3,4,"B")
+        dfa.addEdge(4,3,"A")
+        dfa.addEdge(4,4,"B")
+        return dfa
+
     def test_Determinized3(self):
         """# (A+ | B)*"""
         a = Just("A")
@@ -89,4 +102,6 @@ class TestDeterminize(unittest.TestCase):
         paren = Parens(orr)
         zmm2 = ZeroOrMore(paren)
         tree = RegexAST(zmm2)
-        nfa = tree.toNfa()
+        nfa = tree.toNfa().determinize()
+        correct = self.buildDfa3()
+        self.assertTrue(nfa == correct)
