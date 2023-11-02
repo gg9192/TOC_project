@@ -15,11 +15,11 @@ parts of the project (as listed above, in their respective sections)
 
 1. Define a datatype (in whatever language you are using) for representing regular expressions.
 [10 points]
-See regexAST and related functions
+See regexAST and object object methods
 
 2. Define a datatype for representing nondeterministic finite automata with epsilon-transitions
 (as this format is used for the first step of translating regular expressions). [15 points]
-See NFA.py and associated functions
+See NFA.py and associated object methods
 
 3. Write a printing function that can generate a GraphViz file for the transition diagram of an
 automaton as implemented in the previous step. I am providing a sample GraphViz file for
