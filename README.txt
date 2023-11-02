@@ -4,7 +4,6 @@ Authors: Alex Guo
 Tooling: Python
     - pip install pytest
     - pip install graphvis
-    - pip install os
 
 Sources: 
 nfa.py contains a class definition for an NFA
