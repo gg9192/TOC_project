@@ -1,6 +1,5 @@
 import unittest
 from nfa import *
-import os
 
 class DrawGraphs (unittest.TestCase):
     
