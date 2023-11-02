@@ -36,9 +36,7 @@ class TestDeterminize(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         nfa = ast.toNfa()
-        print(nfa.alphabet)
         nfa.alphabet.add("C")
-        print(nfa.alphabet)
         dfa = nfa.determinize()
         
         correct = self.buildDfa1()
@@ -143,7 +141,6 @@ class TestDeterminize(unittest.TestCase):
 
     def test_Determinized4(self):
         """A+ | ((B | C)* D)+"""
-        print("444444")
         a = Just("A")
         b = Just("B")
         c = Just("C")
@@ -199,9 +196,7 @@ class TestDeterminize(unittest.TestCase):
         zom = ZeroOrMore(p) 
         ast = RegexAST(zom)
         nfa = ast.toNfa()
-        print(nfa.alphabet)
         nfa.alphabet.add("C")
-        print(nfa.alphabet)
         dfa = nfa.determinize()
         
         correct = self.buildDfa1()
@@ -306,7 +301,6 @@ class TestDeterminize(unittest.TestCase):
 
     def test_Determinized4(self):
         """A+ | ((B | C)* D)+"""
-        print("444444")
         a = Just("A")
         b = Just("B")
         c = Just("C")
@@ -361,7 +355,5 @@ class TestDeterminize(unittest.TestCase):
         tree = RegexAST(fol2)
         dfa = tree.toNfa().determinize()
         correct = self.buildDfa5()
-        dfa.convertToImage("nfa")
-        correct.convertToImage("correct")
         assert correct == dfa
         # self.assertTrue(correct == dfa)

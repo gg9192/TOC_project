@@ -19,7 +19,7 @@ class NFA():
         states = self.states == nfa.states
         alphabet = self.alphabet == nfa.alphabet
         edges = self.edges == nfa.edges
-        print(acceptingStates,startStates,states,alphabet,edges)
+        # print(acceptingStates,startStates,states,alphabet,edges)
         return acceptingStates and startStates and states and alphabet and edges
 
     def setStartingStates(self, states:list):
@@ -125,8 +125,6 @@ class NFA():
             newStates.add(stateMap[state])
         nfa.states = newStates
         return nfa
-
-
     
     def setStates(self, states:list):
         """sets the states of the NFA"""
@@ -192,12 +190,24 @@ class NFA():
             temp = self.gri(i,char)
             s = temp.union(s)
         return s if len(s) != 0 else None
-        
+
+    def runString(self, string:str):
+        """runs the string on the automata, returning true if it's accepted"""
+        if self.determinized == False:
+            raise Exception("the NFA must be determinized, please run .determinize()")
+        else:
+            state = 2
+            for char in string:
+                assert(len(self.edges[state][char]) == 1)
+                for i in self.edges[state][char]:
+                    state = i
+                    
+            return True if state in self.acceptingStates else False
 
     def determinize(self):
         # this is the best I can do for private methods, none of the sub-methods can be accessed outside of the method
         """determinizes the NFA"""
-        
+
         def stateToID(state:set) -> int:
             """
             converts a given state to the int id associated with the state
@@ -231,7 +241,6 @@ class NFA():
                         returnset.add(endstate)
             return returnset
             
-
         def gec(state:int) -> set:
             """getEpsilonClosure but for 1 state"""
             active = set()
@@ -261,7 +270,7 @@ class NFA():
             i = stateToID(state)
             dfa.setStates([i])
             return i
-        
+
         def printStateMap():
             """prints the current maping of state id to set"""
             for i in range(0, len(states)):
@@ -287,7 +296,6 @@ class NFA():
                     source = stateToID(startState)
                     dfa.addEdge(source, dest, char)
                     buildDFAHelper(state,dfa, alphabet)
-                
 
         def buildDFA(startState:set):
             # are assigned to the same states every time 
@@ -326,14 +334,11 @@ class NFA():
             dfa.states.remove(1)
             del dfa.edges[1]
 
-            
-
         # unfortunatly, we can't hash a set, represent sets of states as list of sets
         # in the edges hashmap, the index of the state is the id - 1, see state to ID
         states = [None]
         # maps state:int to cached set of epsilon closure
         epsiloncache = {}
-        
         dfa = buildDFA(self.startStates)
         i = 0
         for state in states:
@@ -343,9 +348,6 @@ class NFA():
             if isAcceptingState(state):
                 dfa.setAcceptingStates([i + 1])
             i += 1
-        printStateMap()
         removeNullIfNeeded(dfa)
-        print(epsiloncache)
+        dfa.determinized = True
         return dfa
-        
-        

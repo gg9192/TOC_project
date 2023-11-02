@@ -1,1 +1,28 @@
 To run the tests, do pytest in the terminal, assuming you have downloaded pytest (pip install pytest)
+Most of these are unit tests to make sure that everything works as intended, here are the Regex test cases 
+<> Denote important parts of each string
+See test_Regex for the full tests
+The example 
+
+import unittest
+from regexAST import *
+
+(A | B)*
+Correctly Accepts: "", "ABABBABABABABABBB", "BABABAABAABBABAABBABAB" 
+Correctly Rejects: "BABABAAB<C>AABBABAABBABAB", "BABABAABAAB<C>BABAA<CC>BBABAB", BABABAABAABBABA<C>ABBABAB
+
+((A | B)+ D| C)+
+Correctly Accepts: "ABABDBDC", "ABABDCBD", "ABDCCCCABAD"
+Correctly Rejects: "", "ABABABDABA<BC>", "ABDCCCABABDABA<BC>CD"
+
+# (A+ D | B)*
+Correctly Accepts: "", "AAADADADB", "AAAD"
+Correctly Rejects: "AA<A>", "AA<AB>BB<D>", "<D>AD"
+
+A+ | ((B | C)* D)+
+Correctly Accepts: "D", "BCBCCCCCBCD", "AAAAA"
+Correctly Rejects: "AAAAAB<>", "DB<>", ""
+    
+A B C
+Correctly Accepts: "ABC"
+Correctly Rejects: "ABCAA", "CCABC", "ACBC"
