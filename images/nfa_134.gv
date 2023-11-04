@@ -5,8 +5,8 @@ digraph nfa {
 	3 [label=3 shape=circle]
 	4 [label=4 shape=circle]
 	Start -> 2
-	1 -> 1 [label=B]
 	1 -> 1 [label=A]
+	1 -> 1 [label=B]
 	1 -> 1 [label=C]
 	2 -> 3 [label=A]
 	2 -> 4 [label=B]
